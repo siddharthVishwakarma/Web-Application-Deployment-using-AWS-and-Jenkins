@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                // You can add build steps here if needed
+            }
+        }
+        stage('Deploy to AWS') {
+            steps {
+                echo 'Deploying the application to AWS...'
+                script {
+                    // Upload application code to S3 bucket
+                    awsS3Upload(bucket: 's3-bucket-name', file: 'index.html')
+                    
+                    // Deploy to EC2 instance (example command)
+                    sh 'ssh user@ec2-instance-ip "cd /var/www/html && wget https://s3-bucket-name.s3.amazonaws.com/index.html"'
+                }
+            }
+        }
+    }
+}
